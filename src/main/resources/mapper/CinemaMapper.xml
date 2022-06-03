@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.soulspace.cinemaline.mapper.CinemaMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="xyz.soulspace.cinemaline.entity.Cinema">
+        <id column="id" property="id" />
+        <result column="city_id" property="cityId" />
+        <result column="cinema_name" property="cinemaName" />
+        <result column="address" property="address" />
+        <result column="telephone" property="telephone" />
+        <result column="service_info" property="serviceInfo" />
+        <result column="img_md5" property="imgMd5" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, city_id, cinema_name, address, telephone, service_info, img_md5, update_time, create_time
+    </sql>
+
+</mapper>

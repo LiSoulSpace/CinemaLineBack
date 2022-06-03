@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.soulspace.cinemaline.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="xyz.soulspace.cinemaline.entity.User">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="username" property="username"/>
+        <result column="password_u" property="passwordU"/>
+        <result column="nickname" property="nickname"/>
+        <result column="avatar_md5" property="avatarMd5"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        , create_time, update_time, username, password_u, nickname, avatar_md5
+    </sql>
+    <select id="selectIdAndNicknameAndAvatarMd5ByUsername" resultType="xyz.soulspace.cinemaline.dto.UserBasicDTO">
+        select ums_user.id, ums_user.nickname, img_table.img_url
+        from ums_user,
+             img_table
+        where username = #{username,jdbcType=VARCHAR}
+          and ums_user.avatar_md5 = img_table.img_md5
+    </select>
+    <select id="countById" resultType="int">
+        select count(*)
+        from ums_user
+        where id = #{id,jdbcType=NUMERIC}
+    </select>
+    <select id="selectAllByUsername" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ums_user
+        where
+        username = #{username,jdbcType=VARCHAR}
+    </select>
+
+
+</mapper>
