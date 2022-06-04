@@ -2,6 +2,7 @@ package xyz.soulspace.cinemaline.mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
+import xyz.soulspace.cinemaline.dto.UserBasicDTO;
 import xyz.soulspace.cinemaline.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -16,7 +17,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    List<User> selectIdAndNicknameAndAvatarMd5ByUsername(@Param("username") String username);
+    UserBasicDTO selectIdAndNicknameAndAvatarMd5ByUsername(@Param("username") String username);
 
     int countById(@Param("id") Long id);
 

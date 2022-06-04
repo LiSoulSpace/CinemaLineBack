@@ -1,5 +1,7 @@
 package xyz.soulspace.cinemaline.service;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import xyz.soulspace.cinemaline.dto.UserBasicDTO;
 import xyz.soulspace.cinemaline.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -19,4 +21,8 @@ public interface UserService extends IService<User> {
     String register(String username, String password);
 
     String logout(String username);
+
+    UserBasicDTO getUserBasicDTOByUsername(String username);
+
+    UserDetails loadUserByUsername(String username);
 }

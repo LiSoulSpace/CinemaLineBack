@@ -18,6 +18,7 @@
         id
         , create_time, update_time, username, password_u, nickname, avatar_md5
     </sql>
+
     <select id="selectIdAndNicknameAndAvatarMd5ByUsername" resultType="xyz.soulspace.cinemaline.dto.UserBasicDTO">
         select ums_user.id, ums_user.nickname, img_table.img_url
         from ums_user,
@@ -25,11 +26,13 @@
         where username = #{username,jdbcType=VARCHAR}
           and ums_user.avatar_md5 = img_table.img_md5
     </select>
+
     <select id="countById" resultType="int">
         select count(*)
         from ums_user
         where id = #{id,jdbcType=NUMERIC}
     </select>
+
     <select id="selectAllByUsername" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
