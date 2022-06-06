@@ -17,4 +17,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface FilmMapper extends BaseMapper<Film> {
     List<Film> selectIdByFilmName(@Param("filmName") String filmName);
+
+    List<Film> selectAllById(@Param("id") Long id);
 }

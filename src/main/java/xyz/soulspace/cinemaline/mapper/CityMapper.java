@@ -17,4 +17,6 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface CityMapper extends BaseMapper<City> {
     List<City> selectIdByCityName(@Param("cityName") String cityName);
+
+    List<City> selectCityNameAndIdByInitialChar(@Param("initialChar") String initialChar);
 }

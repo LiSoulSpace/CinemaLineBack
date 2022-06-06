@@ -1,6 +1,7 @@
 package xyz.soulspace.cinemaline.component.security;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +17,14 @@ import xyz.soulspace.cinemaline.util.JwtTokenUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -33,11 +39,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
+                                    @NotNull HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
-        String authHeader = request.getHeader(this.tokenHeader);
-        if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
-            String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
+        Stream<Cookie> stream = Arrays.stream(request.getCookies());
+        Map<String, String> token = stream.filter(cookie -> cookie.getName().equals("token") || cookie.getName().equals("tokenHead"))
+                .collect(Collectors.toMap(Cookie::getName, Cookie::getValue));
+        String authToken = token.get("token");
+        String authHead = token.get("tokenHead");
+        if (authHead != null && authHead.equals(this.tokenHead)) {
             String username = jwtTokenUtil.getUserNameFromToken(authToken);
             log.info("checking username:{}", username);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

@@ -16,5 +16,10 @@
     <sql id="Base_Column_List">
         id, permission_name, uri, descriptions, create_time, update_time
     </sql>
+    <select id="selectPermissionNameById" resultMap="BaseResultMap">
+        select permission_name
+        from ums_permission
+        where id = #{id,jdbcType=NUMERIC}
+    </select>
 
 </mapper>

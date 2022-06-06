@@ -4,20 +4,60 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="xyz.soulspace.cinemaline.entity.Cinema">
-        <id column="id" property="id" />
-        <result column="city_id" property="cityId" />
-        <result column="cinema_name" property="cinemaName" />
-        <result column="address" property="address" />
-        <result column="telephone" property="telephone" />
-        <result column="service_info" property="serviceInfo" />
-        <result column="img_md5" property="imgMd5" />
-        <result column="update_time" property="updateTime" />
-        <result column="create_time" property="createTime" />
+        <id column="id" property="id"/>
+        <result column="city_id" property="cityId"/>
+        <result column="cinema_name" property="cinemaName"/>
+        <result column="address" property="address"/>
+        <result column="telephone" property="telephone"/>
+        <result column="service_info" property="serviceInfo"/>
+        <result column="img_md5" property="imgMd5"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="create_time" property="createTime"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, city_id, cinema_name, address, telephone, service_info, img_md5, update_time, create_time
+        id
+        , city_id, cinema_name, address, telephone, service_info, img_md5, update_time, create_time
     </sql>
+    <select id="selectAllByCityId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from main_cinema
+        where
+        city_id = #{cityId,jdbcType=NUMERIC}
+    </select>
+
+    <select id="selectAllByCityNameAndFilmId" resultType="xyz.soulspace.cinemaline.dto.CinemaSimpleDTO">
+        select
+        cm.id as cinemaId,
+        MIN(cm.cinema_name) as cinemaName,
+        MIN(cm.address) as cinemaAddr,
+        MIN(img.img_url) as cinemaImg,
+        MIN(p.cost) as cost
+        from main_cinema cm,
+        cms_city ct,
+        main_process p,
+        main_film f,
+        img_info img
+        where p.cinema_id = cm.id
+        <if test="cityName != null">
+            and cm.city_id = ct.id
+            and ct.city_name = #{cityName,jdbcType=VARCHAR}
+        </if>
+        <if test="filmId != null">
+            and p.film_id = #{filmId,jdbcType=NUMERIC}
+        </if>
+        and img.img_md5 = cm.img_md5
+        group by cm.id
+    </select>
+
+    <select id="selectCinemaAllDTOById" resultType="xyz.soulspace.cinemaline.dto.CinemaAllDTO">
+        select cinema_name, address, img_info.img_url, telephone, service_info
+        from main_cinema,
+             img_info
+        where main_cinema.id = #{Id,jdbcType=NUMERIC}
+          and main_cinema.img_md5 = img_info.img_md5;
+    </select>
 
 </mapper>

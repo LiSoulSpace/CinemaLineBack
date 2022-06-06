@@ -21,5 +21,10 @@
         from cms_city
         where city_name = #{cityName,jdbcType=VARCHAR}
     </select>
+    <select id="selectCityNameAndIdByInitialChar" resultType="xyz.soulspace.cinemaline.entity.City">
+        select city_name, id
+        from cms_city
+        where initial_char = #{initialChar,jdbcType=VARCHAR}
+    </select>
 
 </mapper>

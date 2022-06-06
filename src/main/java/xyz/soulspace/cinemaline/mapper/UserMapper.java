@@ -17,7 +17,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-    UserBasicDTO selectIdAndNicknameAndAvatarMd5ByUsername(@Param("username") String username);
+    UserBasicDTO selectIdAndNicknameAndAvatarUrlByUsername(@Param("username") String username);
 
     int countById(@Param("id") Long id);
 

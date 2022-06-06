@@ -5,6 +5,8 @@ import xyz.soulspace.cinemaline.dto.UserBasicDTO;
 import xyz.soulspace.cinemaline.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Map;
+
 /**
  * <p>
  * 用户表 服务类
@@ -16,7 +18,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface UserService extends IService<User> {
     boolean isExistUser(Long userId);
 
-    String login(String username, String password);
+    Map<String, String> login(String username, String password);
 
     String register(String username, String password);
 
@@ -25,4 +27,6 @@ public interface UserService extends IService<User> {
     UserBasicDTO getUserBasicDTOByUsername(String username);
 
     UserDetails loadUserByUsername(String username);
+
+    UserBasicDTO whoAmI(String token);
 }

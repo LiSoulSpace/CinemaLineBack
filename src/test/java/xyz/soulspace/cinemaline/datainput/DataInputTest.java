@@ -39,6 +39,8 @@ public class DataInputTest {
     FilmMemberRelationMapper filmMemberRelationMapper;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    UserRoleRelationMapper userRoleRelationMapper;
 
     @Test
     public void addUsers() {
@@ -164,5 +166,17 @@ public class DataInputTest {
         filmMemberRelation.setIsDirector(1);
         filmMemberRelation.setIsActor(0);
         filmMemberRelationMapper.insert(filmMemberRelation);
+    }
+
+    @Test
+    public void testUserRoleRe(){
+        List<Permission> permissionList = userRoleRelationMapper.selectPermissionsByUserId(1L);
+        log.warn(String.valueOf(permissionList));
+    }
+
+    @Test
+    public void getUser(){
+        List<User> admin = userMapper.selectAllByUsername("admin");
+        log.warn(String.valueOf(admin));
     }
 }

@@ -19,12 +19,12 @@
         , create_time, update_time, username, password_u, nickname, avatar_md5
     </sql>
 
-    <select id="selectIdAndNicknameAndAvatarMd5ByUsername" resultType="xyz.soulspace.cinemaline.dto.UserBasicDTO">
-        select ums_user.id, ums_user.nickname, img_table.img_url
+    <select id="selectIdAndNicknameAndAvatarUrlByUsername" resultType="xyz.soulspace.cinemaline.dto.UserBasicDTO">
+        select ums_user.id as username, ums_user.nickname, img_info.img_url as avatar
         from ums_user,
-             img_table
+             img_info
         where username = #{username,jdbcType=VARCHAR}
-          and ums_user.avatar_md5 = img_table.img_md5
+          and ums_user.avatar_md5 = img_info.img_md5
     </select>
 
     <select id="countById" resultType="int">

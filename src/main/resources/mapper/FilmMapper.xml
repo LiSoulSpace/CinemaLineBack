@@ -26,5 +26,12 @@
         from main_film
         where film_name = #{filmName,jdbcType=VARCHAR}
     </select>
+    <select id="selectAllById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from main_film
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
 
 </mapper>

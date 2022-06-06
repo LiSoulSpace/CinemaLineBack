@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xyz.soulspace.cinemaline.mapper.ProcessMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="xyz.soulspace.cinemaline.entity.Process">
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="film_id" property="filmId"/>
+        <result column="cinema_id" property="cinemaId"/>
+        <result column="seatInfo_id" property="seatinfoId"/>
+        <result column="cost" property="cost"/>
+        <result column="start_time" property="startTime"/>
+        <result column="room_name" property="roomName"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        , create_time, update_time, film_id, cinema_id, seatInfo_id, cost, start_time, room_name
+    </sql>
+    <select id="selectAllByCinemaIdAndFilmId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from main_process
+        where
+        cinema_id = #{cinemaId,jdbcType=NUMERIC}
+        AND film_id = #{filmId,jdbcType=NUMERIC}
+    </select>
+
+    <select id="selectTimeByCinemaIdAndFilmId" resultType="xyz.soulspace.cinemaline.dto.ShowTimeDTO">
+        select p.id, p.start_time, p.cost, p.room_name
+        from main_process p
+        where film_id = #{filmId,jdbcType=NUMERIC}
+          and cinema_id = #{cinemaId,jdbcType=NUMERIC};
+    </select>
+</mapper>
