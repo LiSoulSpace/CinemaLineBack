@@ -30,9 +30,11 @@
     </select>
 
     <select id="selectTimeByCinemaIdAndFilmId" resultType="xyz.soulspace.cinemaline.dto.ShowTimeDTO">
-        select p.id, p.start_time, p.cost, p.room_name
-        from main_process p
+        select p.id, p.start_time, p.cost, p.room_name, c.cinema_name
+        from main_process p,
+             main_cinema c
         where film_id = #{filmId,jdbcType=NUMERIC}
-          and cinema_id = #{cinemaId,jdbcType=NUMERIC};
+          and cinema_id = #{cinemaId,jdbcType=NUMERIC}
+          and c.id = cinema_id;
     </select>
 </mapper>

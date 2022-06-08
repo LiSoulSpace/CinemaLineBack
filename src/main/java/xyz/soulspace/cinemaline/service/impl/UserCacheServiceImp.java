@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import xyz.soulspace.cinemaline.entity.Permission;
-import xyz.soulspace.cinemaline.service.RedisService;
+import xyz.soulspace.cinemaline.redis.RedisService;
 import xyz.soulspace.cinemaline.service.UserCacheService;
 
 import java.util.List;

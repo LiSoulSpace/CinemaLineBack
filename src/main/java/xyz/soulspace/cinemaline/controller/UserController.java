@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import xyz.soulspace.cinemaline.api.CommonResult;
 import xyz.soulspace.cinemaline.dto.UserBasicDTO;
 import xyz.soulspace.cinemaline.dto.UserRequestBody;
+import xyz.soulspace.cinemaline.kafka.producer.OrderProducer;
 import xyz.soulspace.cinemaline.service.UserService;
 import xyz.soulspace.cinemaline.util.CookieUtil;
 
@@ -51,6 +52,14 @@ public class UserController {
         CookieUtil.setCookie(request, response, "token", map.get("token"), 24 * 60 * 60);
         CookieUtil.setCookie(request, response, "tokenHead", tokenHead);
         return ResponseEntity.ok(CommonResult.success(map));
+    }
+
+    @Operation(summary = "退出登录")
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        CookieUtil.setCookie(request, response, "token", "", 24 * 60 * 60);
+        CookieUtil.setCookie(request, response, "tokenHead", "");
+        return ResponseEntity.ok(CommonResult.success(null));
     }
 
     @Operation(summary = "whoami")

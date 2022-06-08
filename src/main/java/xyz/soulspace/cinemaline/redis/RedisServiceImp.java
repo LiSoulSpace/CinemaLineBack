@@ -1,9 +1,9 @@
-package xyz.soulspace.cinemaline.service.impl;
+package xyz.soulspace.cinemaline.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import xyz.soulspace.cinemaline.service.RedisService;
+import xyz.soulspace.cinemaline.redis.RedisService;
 
 import java.util.List;
 import java.util.Map;

@@ -4,18 +4,46 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="xyz.soulspace.cinemaline.entity.SeatInfo">
-        <id column="id" property="id" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="process_id" property="processId" />
-        <result column="row_num" property="rowNum" />
-        <result column="column_num" property="columnNum" />
-        <result column="seat_arrangement" property="seatArrangement" />
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="process_id" property="processId"/>
+        <result column="row_num" property="rowNum"/>
+        <result column="column_num" property="columnNum"/>
+        <result column="seat_arrangement" property="seatArrangement"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, create_time, update_time, process_id, row_num, column_num, seat_arrangement
+        id
+        , create_time, update_time, process_id, row_num, column_num, seat_arrangement
     </sql>
+    <select id="selectSeatArrangementByProcessId" resultMap="BaseResultMap">
+        select seat_arrangement
+        from sms_seat_info
+        where process_id = #{processId,jdbcType=NUMERIC}
+    </select>
+
+    <select id="selectSeatDTOByFSCID" resultType="string">
+        select s.seat_arrangement
+        from main_process p,
+             sms_seat_info s
+        where s.process_id = p.id
+          and p.film_id = #{filmId,jdbcType=NUMERIC}
+          and p.cinema_id = #{cinemaId,jdbcType=NUMERIC}
+          and s.process_id = #{showId,jdbcType=NUMERIC};
+    </select>
+
+    <select id="getTicketsByInfo" resultType="java.lang.String">
+        select s.seat_arrangement for update
+        from
+             sms_seat_info s
+        where s.process_id = #{showId,jdbcType=NUMERIC};
+    </select>
+    <update id="setSeatArrangementByProcessId">
+        update sms_seat_info
+        set seat_arrangement = #{seatArrangement,jdbcType=VARCHAR}
+        where process_id = #{processId,jdbcType=NUMERIC}
+    </update>
 
 </mapper>

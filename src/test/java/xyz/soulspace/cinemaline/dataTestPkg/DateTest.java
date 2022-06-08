@@ -1,4 +1,4 @@
-package xyz.soulspace.cinemaline.datainput;
+package xyz.soulspace.cinemaline.dataTestPkg;
 
 import org.junit.jupiter.api.Test;
 

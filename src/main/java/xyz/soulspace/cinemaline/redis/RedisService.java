@@ -1,4 +1,4 @@
-package xyz.soulspace.cinemaline.service;
+package xyz.soulspace.cinemaline.redis;
 
 import java.util.List;
 import java.util.Map;

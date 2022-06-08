@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  kafka:
+    bootstrap-servers: localhost:9092
 
 redis:
   database: cinemaLine

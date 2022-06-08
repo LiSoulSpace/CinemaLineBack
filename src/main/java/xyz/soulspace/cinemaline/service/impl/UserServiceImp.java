@@ -16,6 +16,7 @@ import xyz.soulspace.cinemaline.entity.User;
 import xyz.soulspace.cinemaline.exception.Asserts;
 import xyz.soulspace.cinemaline.mapper.UserMapper;
 import xyz.soulspace.cinemaline.mapper.UserRoleRelationMapper;
+import xyz.soulspace.cinemaline.redis.RedisService;
 import xyz.soulspace.cinemaline.service.UserCacheService;
 import xyz.soulspace.cinemaline.service.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -44,6 +45,8 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
     @Autowired
     JwtTokenUtil jwtTokenUtil;
     @Autowired
+    RedisService redisService;
+    @Autowired
     UserCacheService userCacheService;
     @Autowired
     UserRoleRelationMapper userRoleRelationMapper;
@@ -71,7 +74,7 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
         String token = null;
         try {
             Map<String, String> resultMap = new HashMap<>();
-            UserDetails userDetails = loadUserByUsername(username);
+            UserDetails userDetails = loadUserByUsername(username, password);
             log.warn("password {} , userDetailsPassword {}", password, userDetails.getPassword());
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                 Asserts.fail("密码不正确");
@@ -82,6 +85,7 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             token = jwtTokenUtil.generateToken(userDetails);
+
             UserBasicDTO userBasicDTOByUsername = getUserBasicDTOByUsername(username);
             resultMap.put("userId", String.valueOf(userBasicDTOByUsername.getUserId()));
             resultMap.put("nickName", userBasicDTOByUsername.getNickName());
@@ -98,7 +102,12 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
 
     @Override
     public String register(String username, String password) {
-        return null;
+        User user = new User();
+        user.setUsername(username);
+        user.setPasswordU(passwordEncoder.encode(password));
+        int insert = userMapper.insert(user);
+        if (insert > 0) return username;
+        else return null;
     }
 
     @Override
@@ -112,8 +121,12 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
+    public UserDetails loadUserByUsername(String username, String password) {
         List<User> users = userMapper.selectAllByUsername(username);
+        if (users.size() == 0) {
+            register(username, password);
+        }
+        users = userMapper.selectAllByUsername(username);
         log.warn(users.toString());
         if (users.size() > 0) {
             List<Permission> permissionList = getPermissionList(users.get(0).getId());
@@ -126,7 +139,8 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
 
     @Override
     public UserBasicDTO whoAmI(String token) {
-        return null;
+        String username = jwtTokenUtil.getUserNameFromToken(token);
+        return userMapper.selectIdAndNicknameAndAvatarUrlByUsername(username);
     }
 
 }

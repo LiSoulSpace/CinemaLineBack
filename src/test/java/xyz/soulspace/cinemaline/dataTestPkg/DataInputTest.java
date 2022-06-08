@@ -1,11 +1,9 @@
-package xyz.soulspace.cinemaline.datainput;
+package xyz.soulspace.cinemaline.dataTestPkg;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureJdbc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import xyz.soulspace.cinemaline.entity.*;
 import xyz.soulspace.cinemaline.mapper.*;
@@ -42,7 +40,7 @@ public class DataInputTest {
     @Autowired
     UserRoleRelationMapper userRoleRelationMapper;
 
-    @Test
+    //@Test
     public void addUsers() {
         User user = new User();
         user.setUsername("admin");
@@ -54,7 +52,7 @@ public class DataInputTest {
         userMapper.insert(user);
     }
 
-    @Test
+    //@Test
     public void addImgInfo() {
         ImgInfo imgInfo = new ImgInfo();
         imgInfo.setImgMd5("test_md5");
@@ -62,7 +60,7 @@ public class DataInputTest {
         imgInfoMapper.insert(imgInfo);
     }
 
-    @Test
+    //@Test
     public void addCityInfo() {
         City city = new City();
         city.setCityName("威海");
@@ -70,7 +68,7 @@ public class DataInputTest {
         cityMapper.insert(city);
     }
 
-    @Test
+    //@Test
     public void addCinema() {
         Cinema cinema = new Cinema();
         cinema.setCinemaName("新世纪电影城（长春路店）");
@@ -82,7 +80,7 @@ public class DataInputTest {
         cinemaMapper.insert(cinema);
     }
 
-    @Test
+    //@Test
     public void addFilm() {
         Film film = new Film();
         film.setFilmName("哆啦A梦：大雄的宇宙小战争 2021");
@@ -96,7 +94,7 @@ public class DataInputTest {
         filmMapper.insert(film);
     }
 
-    @Test
+    //@Test
     public void addTags() {
         List<String> tagList = new ArrayList<>();
         tagList.add("爱情");
@@ -112,7 +110,7 @@ public class DataInputTest {
         });
     }
 
-    @Test
+    //@Test
     public void addAreas() {
         List<String> areaList = new ArrayList<>() {{
             add("大陆");
@@ -131,7 +129,7 @@ public class DataInputTest {
         });
     }
 
-    @Test
+    //@Test
     public void addMembers() {
         List<String> memberList = new ArrayList<>() {{
             add("哆啦A梦");
@@ -146,7 +144,7 @@ public class DataInputTest {
         });
     }
 
-    @Test
+    //@Test
     public void addMemberFileRe(){
         FilmMemberRelation filmMemberRelation = new FilmMemberRelation();
         filmMemberRelation.setFilmId(1L);

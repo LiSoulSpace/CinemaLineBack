@@ -5,14 +5,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import xyz.soulspace.cinemaline.api.CommonResult;
 import xyz.soulspace.cinemaline.dto.ShowTimeDTO;
 import xyz.soulspace.cinemaline.service.ProcessService;
+import xyz.soulspace.cinemaline.vo.TimeVO;
 
 import java.util.List;
 
@@ -39,5 +37,11 @@ public class ProcessController {
                                          @RequestParam("cinemaId") Long cinemaId) {
         List<ShowTimeDTO> timeList = processService.getTimeList(filmId, cinemaId);
         return ResponseEntity.ok(CommonResult.success(timeList));
+    }
+
+    @Operation(summary = "添加购票场次信息")
+    @RequestMapping(value = "/addTime", method = RequestMethod.POST)
+    public ResponseEntity<?> addProcess(@RequestBody TimeVO timeVO) {
+        return ResponseEntity.ok(timeVO);
     }
 }

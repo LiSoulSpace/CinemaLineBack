@@ -1,7 +1,12 @@
 package xyz.soulspace.cinemaline.service;
 
+import com.alibaba.fastjson.JSONObject;
+import xyz.soulspace.cinemaline.dto.BuyTicketDTO;
+import xyz.soulspace.cinemaline.dto.SeatDTO;
 import xyz.soulspace.cinemaline.entity.SeatInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +17,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-06-06 10:37:07
  */
 public interface SeatInfoService extends IService<SeatInfo> {
+    JSONObject getSeatInfo(Long filmId, Long cinemaId, Long showId);
 
+    BuyTicketDTO getTicket(Long userId, Long filmId, Long cinemaId, Long showId,
+                           List<Integer> cols, List<Integer> rows);
 }

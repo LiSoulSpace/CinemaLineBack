@@ -12,5 +12,6 @@ public class ShowTimeDTO {
     private LocalDateTime showTime;
     private double cost;
     private String room;
+    private String cinemaName;
 }
 
