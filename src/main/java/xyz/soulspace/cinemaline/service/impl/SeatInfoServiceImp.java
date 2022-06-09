@@ -69,6 +69,7 @@ public class SeatInfoServiceImp extends ServiceImpl<SeatInfoMapper, SeatInfo> im
         log.warn(seatDTO.toString());
         log.warn("需要预定的座位{}-{}", Arrays.toString(rows.toArray()), Arrays.toString(cols.toArray()));
         StringBuilder sb = new StringBuilder();
+        log.warn(String.valueOf(rows.size()));
         for (int i = 0; i < rows.size(); i++) {
             if (seatDTO.getSeatMsg().get(rows.get(i)).get(cols.get(i)) != 0) {
                 log.error("座位({},{})不可用, 为{}", rows.get(i), cols.get(i),
@@ -76,12 +77,13 @@ public class SeatInfoServiceImp extends ServiceImpl<SeatInfoMapper, SeatInfo> im
                 return null;
             } else {
                 List<List<Integer>> seatMsg = seatDTO.getSeatMsg();
-                sb.append('(').append(rows.get(i)).append(',').append(cols.get(i)).append(')');
+                sb.append('(').append(rows.get(i)).append(',')
+                        .append(cols.get(i)).append(')').append(' ');
                 Integer set = seatMsg.get(rows.get(i)).set(cols.get(i), 2);
                 seatDTO.setSeatMsg(seatMsg);
             }
         }
-        String s = JSON.toJSONString(seatDTO, SerializerFeature.DisableCircularReferenceDetect);
+        String s = seatDTO.seatsToString();
         log.warn("写回的座位信息：{}", s);
         int i = seatInfoMapper.setSeatArrangementByProcessId(s, showId);
         if (i > 0) {
@@ -90,6 +92,7 @@ public class SeatInfoServiceImp extends ServiceImpl<SeatInfoMapper, SeatInfo> im
             order.setProcessId(showId);
             order.setUserId(userId);
             order.setSeatInfo(sb.toString());
+            log.warn(order.toString());
             int insert = orderMapper.insert(order);
             log.warn("写入的订单信息{}", order);
             if (insert > 0) {

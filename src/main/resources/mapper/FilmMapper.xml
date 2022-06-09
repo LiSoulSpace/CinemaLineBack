@@ -4,22 +4,24 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="xyz.soulspace.cinemaline.entity.Film">
-        <id column="id" property="id" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="film_name" property="filmName" />
-        <result column="is_show" property="isShow" />
-        <result column="release_time" property="releaseTime" />
-        <result column="income" property="income" />
-        <result column="score" property="score" />
-        <result column="duration" property="duration" />
-        <result column="description_f" property="descriptionF" />
-        <result column="area_id" property="areaId" />
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="film_name" property="filmName"/>
+        <result column="is_show" property="isShow"/>
+        <result column="release_time" property="releaseTime"/>
+        <result column="income" property="income"/>
+        <result column="score" property="score"/>
+        <result column="duration" property="duration"/>
+        <result column="description_f" property="descriptionF"/>
+        <result column="area_id" property="areaId"/>
+        <result column="img_md5" property="imgMd5"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, create_time, update_time, film_name, is_show, release_time, income, score, duration, description_f, area_id
+        id
+        , create_time, update_time, film_name, is_show, release_time, income, score, duration, description_f, area_id
     </sql>
     <select id="selectIdByFilmName" resultMap="BaseResultMap">
         select id

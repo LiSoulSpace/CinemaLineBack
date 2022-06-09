@@ -57,4 +57,6 @@ public class SeatInfoController {
             return ResponseEntity.ok(CommonResult.success(ticket));
         else return ResponseEntity.ok(CommonResult.failed(1, "", null));
     }
+
+
 }

@@ -4,18 +4,49 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="xyz.soulspace.cinemaline.entity.Order">
-        <id column="id" property="id" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="user_id" property="userId" />
-        <result column="process_id" property="processId" />
-        <result column="seat_info" property="seatInfo" />
-        <result column="ticket_num" property="ticketNum" />
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="user_id" property="userId"/>
+        <result column="process_id" property="processId"/>
+        <result column="seat_info" property="seatInfo"/>
+        <result column="ticket_num" property="ticketNum"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, create_time, update_time, user_id, process_id, seat_info, ticket_num
+        id
+        , create_time, update_time, user_id, process_id, seat_info, ticket_num
     </sql>
+    <select id="selectAllById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sms_order
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
+
+
+    <select id="selectOrderSimpleDTOById" resultType="xyz.soulspace.cinemaline.dto.OrderSimpleDTO">
+        select o.id as orderId,
+               f.film_name as title,
+               img.img_url as filmImg,
+               f.duration,
+               p.room_name as room,
+               o.seat_info,
+               p.start_time as showTime,
+               p.cost,
+               c.cinema_name as cinemaName
+        from sms_order o,
+             main_film f,
+             main_process p,
+             img_info img,
+             main_cinema c
+        where p.id = o.process_id
+          and o.id = #{id,jdbcType=NUMERIC}
+          and p.film_id = f.id
+          and img.img_md5 = f.img_md5
+          and c.id = p.cinema_id;
+    </select>
 
 </mapper>

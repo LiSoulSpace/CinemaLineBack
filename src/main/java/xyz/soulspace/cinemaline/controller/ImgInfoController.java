@@ -1,18 +1,27 @@
 package xyz.soulspace.cinemaline.controller;
 
+import io.swagger.v3.oas.annotations.OpenAPI30;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 import xyz.soulspace.cinemaline.api.CommonResult;
 import xyz.soulspace.cinemaline.entity.ImgInfo;
 import xyz.soulspace.cinemaline.service.ImgInfoService;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -22,6 +31,7 @@ import java.util.List;
  * @author soulspace
  * @since 2022-06-02 02:38:28
  */
+@Slf4j
 @Controller
 @RequestMapping("/cinemaline/imgInfo")
 @Tag(name = "图片信息控制器(ImgInfoController)")
@@ -42,5 +52,26 @@ public class ImgInfoController {
     public ResponseEntity<?> listImgInfo() {
         List<ImgInfo> list = imgInfoService.list();
         return ResponseEntity.ok(CommonResult.success(list));
+    }
+
+    @Operation(summary = "图片上传测试")
+    @RequestMapping(value = "/uploadImg", method = RequestMethod.POST, consumes = "multipart/*", headers = "content-type=multipart/form-data")
+    public ResponseEntity<?> uploadFile(@RequestPart("file") MultipartFile file) throws IOException {
+        log.warn(file.getName());
+        log.warn(file.getContentType());
+        log.warn(file.getInputStream().toString());
+        byte[] bytes = file.getInputStream().readAllBytes();
+        log.warn(Arrays.toString(bytes));
+        long fileSize = file.getSize();
+        Map<String,Object> map = new HashMap<>();
+        if (file.isEmpty()) {
+            return ResponseEntity.ok("文件为空");
+        }  else {
+            String fileName = file.getOriginalFilename();
+            // 获取文件的后缀名
+            assert fileName != null;
+            String extensionFileName = fileName.substring(fileName.lastIndexOf("."));
+        }
+        return ResponseEntity.ok(bytes);
     }
 }

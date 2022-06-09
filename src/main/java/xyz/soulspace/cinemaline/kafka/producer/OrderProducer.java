@@ -20,14 +20,14 @@ public class OrderProducer {
         send.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
             @Override
             public void onFailure(Throwable ex) {
-                log.error(ex.toString());
+                log.error(ex.getMessage());
             }
-
             @Override
             public void onSuccess(SendResult<String, String> result) {
                 log.warn(result.toString());
             }
         });
+
         return "Send OK";
     }
 }

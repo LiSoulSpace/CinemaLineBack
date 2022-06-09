@@ -85,6 +85,12 @@ public class Film extends Model<Film> {
     @TableField("area_id")
     private Long areaId;
 
+    /**
+     * 图片信息
+     */
+    @TableField("img_md5")
+    private String imgMd5;
+
 
     @Override
     public Serializable pkVal() {

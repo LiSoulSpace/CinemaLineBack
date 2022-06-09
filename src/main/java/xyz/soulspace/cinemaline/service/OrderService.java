@@ -1,5 +1,6 @@
 package xyz.soulspace.cinemaline.service;
 
+import xyz.soulspace.cinemaline.dto.OrderDTO;
 import xyz.soulspace.cinemaline.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-06-02 10:03:04
  */
 public interface OrderService extends IService<Order> {
+    boolean sendOrder(Order order);
 
+    OrderDTO getOrderDTOByOrderId(Long orderId);
 }

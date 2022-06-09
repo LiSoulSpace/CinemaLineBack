@@ -10,3 +10,14 @@ redis:
     permissionList: 'ums:permissionList'
   expire:
     common: 86400 # 24小时
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui
+    enabled: true
+    use-root-path: false
+    disable-swagger-default-url: true
+  api-docs:
+    enabled: true
+    path: /api-docs
+  packages-to-scan: xyz.soulspace.cinemaline.api.controller, xyz.soulspace.cinemaline.controller
