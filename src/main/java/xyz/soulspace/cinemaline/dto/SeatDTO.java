@@ -13,4 +13,8 @@ public class SeatDTO {
     public String seatsToString() {
         return "{\"seatMsg\":" + seatMsg.toString() + "}";
     }
+
+    public void setLocation(int row, int col, int target) {
+        this.seatMsg.get(row).set(col, target);
+    }
 }

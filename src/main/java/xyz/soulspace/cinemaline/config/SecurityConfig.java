@@ -13,15 +13,21 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import xyz.soulspace.cinemaline.component.security.JwtAuthenticationTokenFilter;
 import xyz.soulspace.cinemaline.component.security.RestAuthenticationEntryPoint;
 import xyz.soulspace.cinemaline.component.security.RestfulAccessDeniedHandler;
+import xyz.soulspace.cinemaline.service.UserService;
 
 import javax.servlet.Filter;
 
@@ -31,6 +37,16 @@ import javax.servlet.Filter;
 @Slf4j
 @Configuration
 public class SecurityConfig {
+
+    @Autowired
+    private UserService userService;
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        //获取登录用户信息
+        return username -> userService.loadUserByUsername(username);
+    }
+
     @Bean
     SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = httpSecurity
@@ -48,6 +64,9 @@ public class SecurityConfig {
                 .anyRequest()
                 .authenticated()
                 // 关闭跨站请求防护及不使用session
+                .and()
+                .cors()
+                .configurationSource(corsConfigurationSource())
                 .and()
                 .csrf()
                 .disable()
@@ -82,5 +101,24 @@ public class SecurityConfig {
     @Bean
     public IgnoreUrlsConfig ignoreUrlsConfig() {
         return new IgnoreUrlsConfig();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        //允许所有域名进行跨域调用
+        //config.addAllowedOrigin("*");
+        config.addAllowedOriginPattern("*");
+        //允许跨越发送cookie
+        config.setAllowCredentials(true);
+        //放行全部原始头信息
+        config.addAllowedHeader("*");
+        //允许所有请求方法跨域调用
+        config.addAllowedMethod("*");
+
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

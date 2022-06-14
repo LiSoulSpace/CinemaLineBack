@@ -38,6 +38,8 @@ public class UserController {
     private String tokenHeader;
     @Value("${jwt.tokenHead}")
     private String tokenHead;
+    @Value("${Cros.set-domain}")
+    private String domain;
     @Autowired
     UserService userService;
 
@@ -47,10 +49,14 @@ public class UserController {
                                    HttpServletRequest request, HttpServletResponse response) {
         Map<String, String> map = userService.login(user.getUsername(), user.getPassword());
         if (map.get("token") == null) {
-            return ResponseEntity.ok(CommonResult.failed(1, "用户名或密码错误", null));
+            String msg = map.get("msg");
+            return ResponseEntity.ok(CommonResult.failed(1, msg, null));
         }
         CookieUtil.setCookie(request, response, "token", map.get("token"), 24 * 60 * 60);
         CookieUtil.setCookie(request, response, "tokenHead", tokenHead);
+        response.setHeader("token", map.get("token"));
+        response.setHeader("tokenHead", tokenHead);
+        response.setHeader("tokenHeader", tokenHeader);
         return ResponseEntity.ok(CommonResult.success(map));
     }
 
@@ -65,14 +71,15 @@ public class UserController {
     @Operation(summary = "whoami")
     @RequestMapping(value = "/whoami", method = RequestMethod.GET)
     public ResponseEntity<?> whoAmI(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        UserBasicDTO userBasicDTO = null;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals("token")) {
-                userBasicDTO = userService.whoAmI(cookie.getValue());
-            }
-        }
+        String token = request.getHeader(tokenHeader);
+        UserBasicDTO userBasicDTO = userService.whoAmI(token);
         return ResponseEntity.ok(CommonResult.success(userBasicDTO));
+    }
+
+    @Operation(summary = "获取个人信息")
+    @RequestMapping(value = "/sig", method = RequestMethod.GET)
+    public ResponseEntity<?> onesInfo(@RequestParam Long userId) {
+        return ResponseEntity.ok(userId);
     }
 
 }

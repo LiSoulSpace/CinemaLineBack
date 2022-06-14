@@ -19,5 +19,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ProcessMapper extends BaseMapper<Process> {
     List<Process> selectAllByCinemaIdAndFilmId(@Param("cinemaId") Long cinemaId, @Param("filmId") Long filmId);
 
-    List<ShowTimeDTO> selectTimeByCinemaIdAndFilmId(@Param("cinemaId") Long cinemaId, @Param("filmId") Long filmId);
+    List<ShowTimeDTO> selectTimeByCinemaIdAndFilmId(@Param("filmId") Long filmId, @Param("cinemaId") Long cinemaId);
 }

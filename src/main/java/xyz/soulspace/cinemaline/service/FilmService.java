@@ -1,7 +1,11 @@
 package xyz.soulspace.cinemaline.service;
 
+import xyz.soulspace.cinemaline.dto.FilmAllDTO;
+import xyz.soulspace.cinemaline.dto.FilmSimpleDTO;
 import xyz.soulspace.cinemaline.entity.Film;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface FilmService extends IService<Film> {
     Film getFilmById(Long id);
+
+    FilmAllDTO getFilmAllById(Long id);
+
+    List<FilmSimpleDTO> getAll();
 }

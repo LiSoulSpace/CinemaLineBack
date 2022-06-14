@@ -48,5 +48,12 @@
           and img.img_md5 = f.img_md5
           and c.id = p.cinema_id;
     </select>
+    <select id="getIdByUserIdAndProcessIdAndSeatInfo" resultMap="BaseResultMap">
+        select id
+        from sms_order
+        where user_id = #{userId,jdbcType=NUMERIC}
+          AND process_id = #{processId,jdbcType=NUMERIC}
+          AND seat_info = #{seatInfo,jdbcType=VARCHAR}
+    </select>
 
 </mapper>

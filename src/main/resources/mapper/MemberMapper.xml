@@ -4,16 +4,31 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="xyz.soulspace.cinemaline.entity.Member">
-        <id column="id" property="id" />
-        <result column="create_time" property="createTime" />
-        <result column="update_time" property="updateTime" />
-        <result column="member_name" property="memberName" />
-        <result column="image_md5" property="imageMd5" />
+        <id column="id" property="id"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="member_name" property="memberName"/>
+        <result column="image_md5" property="imageMd5"/>
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, create_time, update_time, member_name, image_md5
+        id
+        , create_time, update_time, member_name, image_md5
     </sql>
+    <select id="selectAllById" resultType="xyz.soulspace.cinemaline.dto.MemberDTO">
+        select m.member_name as personName,
+               img.img_url   as personImg,
+               fm.is_director
+        from fms_member m,
+             main_film f,
+             fms_film_member_relation fm,
+             img_info img
+        where fm.film_id = f.id
+          and f.id = #{id,jdbcType=NUMERIC}
+          and fm.member_id = m.id
+          and m.image_md5 = img.img_md5
+        ;
+    </select>
 
 </mapper>

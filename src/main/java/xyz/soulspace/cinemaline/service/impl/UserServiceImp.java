@@ -3,6 +3,7 @@ package xyz.soulspace.cinemaline.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import xyz.soulspace.cinemaline.util.JwtTokenUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +52,8 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
     UserCacheService userCacheService;
     @Autowired
     UserRoleRelationMapper userRoleRelationMapper;
+    @Value("${jwt.tokenHead}")
+    private String tokenHead;
 
     @Override
     public boolean isExistUser(Long userId) {
@@ -77,10 +81,12 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
             UserDetails userDetails = loadUserByUsername(username, password);
             log.warn("password {} , userDetailsPassword {}", password, userDetails.getPassword());
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-                Asserts.fail("密码不正确");
+                resultMap.put("msg", "用户名或密码错误");
+                return resultMap;
             }
             if (!userDetails.isEnabled()) {
-                Asserts.fail("帐号已被禁用");
+                resultMap.put("msg", "账号被禁用");
+                return resultMap;
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -105,6 +111,8 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
         User user = new User();
         user.setUsername(username);
         user.setPasswordU(passwordEncoder.encode(password));
+        user.setNickname(username);
+        user.setAvatarMd5("jia-ran");
         int insert = userMapper.insert(user);
         if (insert > 0) return username;
         else return null;
@@ -138,9 +146,30 @@ public class UserServiceImp extends ServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
+    public UserDetails loadUserByUsername(String username) {
+        User userName = getByUserName(username);
+        if (userName != null) {
+            return new AppUserDetails(userName, new ArrayList<>());
+        }
+        throw new UsernameNotFoundException("用户名或密码错误");
+    }
+
+    @Override
+    public User getByUserName(String username) {
+
+        List<User> users = userMapper.selectAllByUsername(username);
+        if (users.size() > 0) {
+            return users.get(0);
+        } else {
+            return null;
+        }
+    }
+
+
+    @Override
     public UserBasicDTO whoAmI(String token) {
+        token = token.substring(tokenHead.length());
         String username = jwtTokenUtil.getUserNameFromToken(token);
         return userMapper.selectIdAndNicknameAndAvatarUrlByUsername(username);
     }
-
 }

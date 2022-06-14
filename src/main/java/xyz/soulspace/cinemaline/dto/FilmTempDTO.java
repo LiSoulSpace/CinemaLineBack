@@ -1,22 +1,19 @@
 package xyz.soulspace.cinemaline.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-@Builder
-public class FileAllDTO {
+public class FilmTempDTO {
     private String title;
     private String filmImg;
-    private List<String> tags;
     private String area;
     private String duration;
-    private String years;
+    private LocalDateTime years;
     private String description;
-    private double score;
+    private BigDecimal score;
     private int income;
-    private List<MemberDTO> people;
-    private List<CommentDTO> comments;
 }

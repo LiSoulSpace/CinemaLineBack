@@ -5,19 +5,25 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.util.StreamUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.DispatcherServlet;
 import xyz.soulspace.cinemaline.api.CommonResult;
 import xyz.soulspace.cinemaline.entity.ImgInfo;
 import xyz.soulspace.cinemaline.service.ImgInfoService;
 
+import javax.servlet.ServletContext;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +44,8 @@ import java.util.Map;
 public class ImgInfoController {
     @Autowired
     ImgInfoService imgInfoService;
+    @Autowired
+    ServletContext servletContext;
 
     @Operation(summary = "添加图片信息")
     @RequestMapping(value = "/addImgInfo", method = RequestMethod.POST)
@@ -63,10 +71,10 @@ public class ImgInfoController {
         byte[] bytes = file.getInputStream().readAllBytes();
         log.warn(Arrays.toString(bytes));
         long fileSize = file.getSize();
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         if (file.isEmpty()) {
             return ResponseEntity.ok("文件为空");
-        }  else {
+        } else {
             String fileName = file.getOriginalFilename();
             // 获取文件的后缀名
             assert fileName != null;

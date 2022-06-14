@@ -10,6 +10,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.core.ProducerFactoryUtils;
+import xyz.soulspace.cinemaline.entity.Order;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class KafkaConfig {
     // 创建一个名为testtopic的Topic并设置分区数为8，分区副本数为2
     @Bean
     public NewTopic initialTopic() {
-        return TopicBuilder.name("topic-test").build();
+        return TopicBuilder.name("topic-test").partitions(5).build();
     }
 
     // 如果要修改分区数，只需修改配置值重启项目即可
@@ -51,6 +52,16 @@ public class KafkaConfig {
 
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate2() {
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
+    }
+
+    @Bean
+    public KafkaTemplate<String, Map<String, String>> kafkaTemplateMap(){
+        return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
+    }
+
+    @Bean
+    public KafkaTemplate<String, Order> kafkaTemplate3() {
         return new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(producerConfigs()));
     }
 

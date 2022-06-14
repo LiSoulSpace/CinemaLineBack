@@ -11,6 +11,13 @@ public interface RedisService {
      */
     void set(String key, Object value, long time);
 
+    Object execute(String scriptName, List<String> list);
+
+    /**
+     * 清空数据库
+     */
+    void flushAll();
+
     /**
      * 保存属性
      */

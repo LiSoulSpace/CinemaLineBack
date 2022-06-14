@@ -16,6 +16,7 @@ import xyz.soulspace.cinemaline.dto.BuyTicketDTO;
 import xyz.soulspace.cinemaline.service.SeatInfoService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -58,5 +59,30 @@ public class SeatInfoController {
         else return ResponseEntity.ok(CommonResult.failed(1, "", null));
     }
 
+    @Operation(summary = "能否购票")
+    @RequestMapping(value = "/canIBuy", method = RequestMethod.GET)
+    public ResponseEntity<?> canIBuy(@RequestParam("userId") Long userId,
+                                     @RequestParam("filmId") Long filmId,
+                                     @RequestParam("cinemaId") Long cinemaId,
+                                     @RequestParam("showId") Long showId,
+                                     @RequestParam("row") List<Integer> row,
+                                     @RequestParam("col") List<Integer> col
+    ) {
+        CommonResult<Map<String, Object>> mapCommonResult = seatInfoService.canIBuy(userId, filmId, cinemaId, showId, col, row);
+        return ResponseEntity.ok(mapCommonResult);
+    }
 
+    @Operation(summary = "买票 加入消息队列")
+    @RequestMapping(value = "/getTicketKafka", method = RequestMethod.GET)
+    public ResponseEntity<?> getOrderKafka(@RequestParam("userId") Long userId,
+                                           @RequestParam("filmId") Long filmId,
+                                           @RequestParam("cinemaId") Long cinemaId,
+                                           @RequestParam("showId") Long showId,
+                                           @RequestParam("row") List<Integer> row,
+                                           @RequestParam("col") List<Integer> col) {
+        BuyTicketDTO ticket = seatInfoService.getTicketKafka(userId, filmId, cinemaId, showId, col, row);
+        if (ticket != null)
+            return ResponseEntity.ok(CommonResult.success(ticket));
+        else return ResponseEntity.ok(CommonResult.failed(1, "", null));
+    }
 }

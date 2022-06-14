@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @Controller
 @CrossOrigin
-@RequestMapping("/cinemaline/process")
+@RequestMapping("/show")
 @Tag(name = "电影场次控制器(TimeController)")
 public class ProcessController {
     @Autowired
@@ -36,6 +36,9 @@ public class ProcessController {
     public ResponseEntity<?> getTimeList(@RequestParam("filmId") Long filmId,
                                          @RequestParam("cinemaId") Long cinemaId) {
         List<ShowTimeDTO> timeList = processService.getTimeList(filmId, cinemaId);
+        timeList.forEach(e->{
+            log.warn(e.toString());
+        });
         return ResponseEntity.ok(CommonResult.success(timeList));
     }
 

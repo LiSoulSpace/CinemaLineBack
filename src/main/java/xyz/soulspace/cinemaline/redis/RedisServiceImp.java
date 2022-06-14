@@ -1,15 +1,17 @@
 package xyz.soulspace.cinemaline.redis;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Service;
-import xyz.soulspace.cinemaline.redis.RedisService;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 @Service
 public class RedisServiceImp implements RedisService {
     @Autowired
@@ -18,6 +20,23 @@ public class RedisServiceImp implements RedisService {
     @Override
     public void set(String key, Object value, long time) {
         redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public Object execute(String scriptName, List<String> list) {
+        ClassPathResource classPathResource = new ClassPathResource("redis/scripts/" + scriptName);
+        log.debug(classPathResource.getFilename());
+        return redisTemplate.execute(
+                RedisScript.of(classPathResource, Object.class),
+                list);
+    }
+
+    @Override
+    public void flushAll() {
+        redisTemplate.execute((RedisCallback<Object>) connection -> {
+            connection.flushAll();
+            return null;
+        });
     }
 
     @Override
@@ -191,5 +210,11 @@ public class RedisServiceImp implements RedisService {
     @Override
     public Long lRemove(String key, long count, Object value) {
         return redisTemplate.opsForList().remove(key, count, value);
+    }
+
+    private void test(List<String> sList) {
+        Boolean orElse = Optional.ofNullable(redisTemplate.execute(
+                RedisScript.of(new ClassPathResource("redis/getTicket.lua"), Boolean.class),
+                sList)).orElse(false);
     }
 }

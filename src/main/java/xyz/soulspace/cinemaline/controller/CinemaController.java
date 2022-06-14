@@ -24,7 +24,7 @@ import java.util.List;
  */
 @CrossOrigin
 @Controller
-@RequestMapping("/cinemaline/cinema")
+@RequestMapping("/cinema")
 @Tag(name = "影院控制器(CinemaController)")
 public class CinemaController {
 

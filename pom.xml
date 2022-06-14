@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>xyz.soulspace</groupId>
-    <artifactId>CinemaLine</artifactId>
+    <artifactId>cinemaline</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>CinemaLine</name>
     <description>CinemaLine</description>
@@ -19,6 +19,7 @@
             <email>lisoulspace@163.com</email>
         </developer>
     </developers>
+
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -101,6 +102,13 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
+        <dependency>
+            <groupId>com.google.zxing</groupId>
+            <artifactId>core</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -153,12 +161,23 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <image>
+                        <name>localhost:8080/lisoulspace.xyz/${project.artifactId}:${project.version}</name>
+                    </image>
                     <excludes>
                         <exclude>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.8</version>
+                <configuration>
+                    <repository>xyz.soulspace.cinemaline/${project.artifactId}</repository>
                 </configuration>
             </plugin>
         </plugins>

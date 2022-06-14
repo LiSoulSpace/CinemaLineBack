@@ -1,6 +1,9 @@
 package xyz.soulspace.cinemaline.util;
 
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +14,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @UtilityClass
+@Slf4j
 public class CookieUtil {
+    private String domain;
+
     /**
      * 得到Cookie的值, 不编码
      *
@@ -21,6 +27,10 @@ public class CookieUtil {
      */
     public static String getCookieValue(HttpServletRequest request, String cookieName) {
         return getCookieValue(request, cookieName, false);
+    }
+
+    public static void setDomain(String domain) {
+        CookieUtil.domain = domain;
     }
 
     /**
@@ -134,15 +144,16 @@ public class CookieUtil {
             if (cookieValue == null) {
                 cookieValue = "";
             } else if (isEncode) {
-                cookieValue = URLEncoder.encode(cookieValue, "utf-8");
+                cookieValue = URLEncoder.encode(cookieValue, StandardCharsets.UTF_8);
             }
             Cookie cookie = new Cookie(cookieName, cookieValue);
+            //cookie.setDomain(domain);
             if (cookieMaxAge > 0)
                 cookie.setMaxAge(cookieMaxAge);
             if (null != request) {// 设置域名的cookie
                 String domainName = getDomainName(request);
-                System.out.println(domainName);
-                if (!"localhost".equals(domainName)) {
+                log.warn(domainName);
+                if (!("localhost".equals(domainName))) {
                     cookie.setDomain(domainName);
                 }
             }
@@ -158,8 +169,8 @@ public class CookieUtil {
      *
      * @param cookieMaxAge cookie生效的最大秒数
      */
-    private static final void doSetCookie(HttpServletRequest request, HttpServletResponse response,
-                                          String cookieName, String cookieValue, int cookieMaxAge, String encodeString) {
+    private static void doSetCookie(HttpServletRequest request, HttpServletResponse response,
+                                    String cookieName, String cookieValue, int cookieMaxAge, String encodeString) {
         try {
             if (cookieValue == null) {
                 cookieValue = "";
@@ -172,8 +183,8 @@ public class CookieUtil {
             }
             if (null != request) {// 设置域名的cookie
                 String domainName = getDomainName(request);
-                System.out.println(domainName);
-                if (!"localhost".equals(domainName)) {
+                log.warn(domainName);
+                if (!("localhost".equals(domainName))) {
                     cookie.setDomain(domainName);
                 }
             }
@@ -187,7 +198,7 @@ public class CookieUtil {
     /**
      * 得到cookie的域名
      */
-    private static final String getDomainName(HttpServletRequest request) {
+    private static String getDomainName(HttpServletRequest request) {
         String domainName = null;
         // 通过request对象获取访问的url地址
         String serverName = request.getRequestURL().toString();

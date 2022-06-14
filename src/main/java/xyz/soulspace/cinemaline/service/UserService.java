@@ -28,5 +28,9 @@ public interface UserService extends IService<User> {
 
     UserDetails loadUserByUsername(String username, String password);
 
+    UserDetails loadUserByUsername(String username);
+
+    User getByUserName(String username);
+
     UserBasicDTO whoAmI(String token);
 }

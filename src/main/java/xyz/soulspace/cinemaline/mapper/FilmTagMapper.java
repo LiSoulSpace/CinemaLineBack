@@ -1,4 +1,6 @@
 package xyz.soulspace.cinemaline.mapper;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 import xyz.soulspace.cinemaline.entity.FilmTag;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -14,5 +16,5 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface FilmTagMapper extends BaseMapper<FilmTag> {
-
+    List<FilmTag> selectTagById(@Param("id") Long id);
 }

@@ -9,7 +9,6 @@
         <result column="update_time" property="updateTime"/>
         <result column="film_id" property="filmId"/>
         <result column="cinema_id" property="cinemaId"/>
-        <result column="seatInfo_id" property="seatinfoId"/>
         <result column="cost" property="cost"/>
         <result column="start_time" property="startTime"/>
         <result column="room_name" property="roomName"/>
@@ -30,7 +29,7 @@
     </select>
 
     <select id="selectTimeByCinemaIdAndFilmId" resultType="xyz.soulspace.cinemaline.dto.ShowTimeDTO">
-        select p.id, p.start_time, p.cost, p.room_name, c.cinema_name
+        select p.id as showId, p.start_time as showTime, p.cost, p.room_name as room, c.cinema_name
         from main_process p,
              main_cinema c
         where film_id = #{filmId,jdbcType=NUMERIC}

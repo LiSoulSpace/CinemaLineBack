@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-@Order(100)
+@Order(1)
 public class DependenciesInject {
     @Bean
     public RedisSerializer<Object> redisSerializer() {

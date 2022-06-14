@@ -15,4 +15,14 @@
         id, create_time, update_time, tag
     </sql>
 
+    <select id="selectTagById" resultMap="BaseResultMap">
+        select t.tag
+        from fms_tag_film_relation ft,
+             main_film f,
+             fms_film_tag t
+        where f.id = 1
+          and ft.film_id = f.id
+          and ft.tag_id = t.id;
+    </select>
+
 </mapper>

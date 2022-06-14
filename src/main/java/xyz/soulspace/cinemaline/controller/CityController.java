@@ -27,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Controller
-@RequestMapping("/cinemaline/city")
 @Tag(name = "城市控制器(CityController)")
 @CrossOrigin
 public class CityController {

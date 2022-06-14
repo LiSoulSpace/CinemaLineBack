@@ -35,5 +35,37 @@
         where
         id = #{id,jdbcType=NUMERIC}
     </select>
+    <select id="selectFList" resultType="xyz.soulspace.cinemaline.dto.FilmSimpleDTO">
+        select
+        <include refid="Base_Column_List"/>
+        from main_film
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
+    <select id="selectAll" resultType="xyz.soulspace.cinemaline.dto.FilmSimpleDTO">
+        select f.id, f.film_name, f.score, img.img_url
+        from main_film f,
+             img_info img,
+             fms_film_tag t,
+             fms_tag_film_relation tf
+        where f.img_md5 = img.img_md5
+        group by f.id, f.film_name, f.score, img.img_url
+    </select>
+    <select id="selectFAllById" resultType="xyz.soulspace.cinemaline.dto.FilmTempDTO">
+        select f.film_name     as title,
+               img.img_url     as filmImg,
+               fai.area,
+               f.duration,
+               f.release_time as years,
+               f.description_f as description,
+               f.score,
+               f.income
+        from main_film f,
+             img_info img,
+             fms_area_info fai
+        where f.id = #{id,jdbcType=NUMERIC}
+          and f.img_md5 = img.img_md5
+          and fai.id = f.area_id
+    </select>
 
 </mapper>

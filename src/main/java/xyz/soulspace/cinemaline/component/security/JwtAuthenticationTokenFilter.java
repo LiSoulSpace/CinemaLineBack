@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import xyz.soulspace.cinemaline.util.CookieUtil;
 import xyz.soulspace.cinemaline.util.JwtTokenUtil;
 
 import javax.servlet.FilterChain;
@@ -41,16 +42,14 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     @NotNull HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
-        Stream<Cookie> stream = Arrays.stream(request.getCookies());
-        Map<String, String> token = stream.filter(cookie -> cookie.getName().equals("token") || cookie.getName().equals("tokenHead"))
-                .collect(Collectors.toMap(Cookie::getName, Cookie::getValue));
-        String authToken = token.get("token");
-        String authHead = token.get("tokenHead");
-        if (authHead != null && authHead.equals(this.tokenHead)) {
+        String authHeader = request.getHeader(this.tokenHeader);
+        if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
+            String authToken = authHeader.substring(this.tokenHead.length());// The part after "Bearer "
             String username = jwtTokenUtil.getUserNameFromToken(authToken);
             log.info("checking username:{}", username);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                log.warn(userDetails.getUsername());
                 if (jwtTokenUtil.validateToken(authToken, userDetails)) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

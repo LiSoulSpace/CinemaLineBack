@@ -21,4 +21,8 @@ public interface OrderMapper extends BaseMapper<Order> {
     List<Order> selectAllById(@Param("id") Long id);
 
     OrderSimpleDTO selectOrderSimpleDTOById(@Param("id") Long id);
+
+    List<Order> getIdByUserIdAndProcessIdAndSeatInfo(@Param("userId") Long userId,
+                                                     @Param("processId") Long processId,
+                                                     @Param("seatInfo") String seatInfo);
 }

@@ -8,4 +8,5 @@ import lombok.Data;
 public class MemberDTO {
     private String personName;
     private String personImg;
+    private int isDirector;
 }

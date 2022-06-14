@@ -3,6 +3,7 @@ package xyz.soulspace.cinemaline.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import xyz.soulspace.cinemaline.dto.OrderDTO;
+import xyz.soulspace.cinemaline.dto.OrderIdDTO;
 import xyz.soulspace.cinemaline.dto.OrderSimpleDTO;
 import xyz.soulspace.cinemaline.entity.Order;
 import xyz.soulspace.cinemaline.mapper.OrderMapper;
@@ -52,6 +53,22 @@ public class OrderServiceImp extends ServiceImpl<OrderMapper, Order> implements 
         return null;
     }
 
+    @Override
+    public OrderIdDTO getOrderIdByInfo(Long userId, Long filmId, Long cinemaId, Long showId,
+                                       List<Integer> rows, List<Integer> cols) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cols.size(); i++) {
+            if (i != 0) sb.append(' ');
+            sb.append('(').append(rows.get(i)).append(',').append(cols.get(i)).append(')');
+        }
+        String seatInfo = sb.toString();
+        log.warn("{}-{}-{}", userId, showId, seatInfo);
+        List<Order> id = orderMapper.getIdByUserIdAndProcessIdAndSeatInfo(userId, showId, seatInfo);
+        OrderIdDTO orderIdDTO = new OrderIdDTO();
+        orderIdDTO.setOrderId(id.get(0).getId());
+        return orderIdDTO;
+    }
+
     public List<List<Integer>> getSeatInfo(String seatInfo) {
         String[] strings = seatInfo.split(" ");
         List<List<Integer>> seats = new ArrayList<>();
@@ -68,6 +85,5 @@ public class OrderServiceImp extends ServiceImpl<OrderMapper, Order> implements 
         }
         return seats;
     }
-
 
 }
